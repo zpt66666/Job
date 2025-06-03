@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>行动计划 - 职业生涯管理系统</title>
+    <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="#">职业生涯管理系统</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/}"><i class="fas fa-home"></i> 首页</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/personal-info}"><i class="fas fa-user"></i> 个人信息</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/skill-assessment}"><i class="fas fa-briefcase"></i> 职业规划</a>
+                    </li>
+                     <li class="nav-item">
+                        <a class="nav-link" th:href="@{/resume-tool}"><i class="fas fa-file-alt"></i> 简历工具</a>
+                    </li>
+                     <li class="nav-item">
+                        <a class="nav-link" th:href="@{/mock-interview}"><i class="fas fa-chalkboard-teacher"></i> 模拟面试</a>
+                    </li>
+                     <li class="nav-item">
+                        <a class="nav-link active" th:href="@{/action-plan}"><i class="fas fa-tasks"></i> 行动计划</a>
+                    </li>
+                     <li class="nav-item">
+                        <a class="nav-link" th:href="@{/log-viewer}"><i class="fas fa-clipboard-list"></i> 日志管理</a>
+                    </li>
+                </ul>
+                <div class="d-flex">
+                    <div th:if="${session.user}" class="dropdown">
+                        <button class="btn btn-light dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-circle"></i>
+                            <span th:text="${session.user?.username}">用户名</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" th:href="@{/settings}"><i class="fas fa-cog"></i> 设置</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> 退出</a></li>
+                        </ul>
+                    </div>
+                     <div th:unless="${session.user}">
+                        <a th:href="@{/login}" class="btn btn-outline-light"><i class="fas fa-sign-in-alt me-2"></i>登录</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <h2>行动计划</h2>
+        <div class="card shadow mt-3">
+            <div class="card-body">
+                <form action="/career/action-plan/save" method="post">
+                    <div class="mb-3">
+                        <label for="title" class="form-label">计划标题</label>
+                        <input type="text" class="form-control" id="title" name="title" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="content" class="form-label">计划内容</label>
+                        <textarea class="form-control" id="content" name="content" rows="5" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">保存计划</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+</body>
+</html> 
