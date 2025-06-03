@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>填写简历 - 职业生涯管理系统</title>
+    <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="#">职业生涯管理系统</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/}"><i class="fas fa-home"></i> 首页</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/personal-info}"><i class="fas fa-user"></i> 个人信息</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/skill-assessment}"><i class="fas fa-briefcase"></i> 职业规划</a>
+                    </li>
+                     <li class="nav-item">
+                        <a class="nav-link active" th:href="@{/resume-tool}"><i class="fas fa-file-alt"></i> 简历工具</a>
+                    </li>
+                     <li class="nav-item">
+                        <a class="nav-link" th:href="@{/mock-interview}"><i class="fas fa-chalkboard-teacher"></i> 模拟面试</a>
+                    </li>
+                     <li class="nav-item">
+                        <a class="nav-link" th:href="@{/action-plan}"><i class="fas fa-tasks"></i> 行动计划</a>
+                    </li>
+                </ul>
+                <div class="d-flex">
+                    <div th:if="${session.user}" class="dropdown">
+                        <button class="btn btn-light dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-circle"></i>
+                            <span th:text="${session.user?.username}">用户名</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" th:href="@{/settings}"><i class="fas fa-cog"></i> 设置</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> 退出</a></li>
+                        </ul>
+                    </div>
+                     <div th:unless="${session.user}">
+                        <a th:href="@{/login}" class="btn btn-outline-light"><i class="fas fa-sign-in-alt me-2"></i>登录</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title mb-4">填写简历</h4>
+                        
+                        <!-- 添加 form 标签，设置 method 和 action -->
+                        <form id="resumeForm">
+
+                        <!-- 基本信息 -->
+                        <div class="mb-4">
+                            <h5>基本信息</h5>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">姓名</label>
+                                    <!-- 添加 name 属性 -->
+                                    <input type="text" class="form-control" id="fullName" name="fullName" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">联系邮箱</label>
+                                     <!-- 添加 name 属性 -->
+                                    <input type="email" class="form-control" id="contactEmail" name="contactEmail" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">手机号码</label>
+                                     <!-- 添加 name 属性 -->
+                                    <input type="tel" class="form-control" id="phoneNumber" name="phoneNumber" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 教育经历 -->
+                        <!-- 暂时移除或注释掉复杂的动态添加部分 -->
+                        <!-- ... education section ... -->
+                        <div class="mb-4">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5 class="mb-0">教育经历 (当前简单模式下暂不支持)</h5>
+                            </div>
+                        </div>
+
+                        <!-- 工作/实习经历 -->
+                        <!-- ... experience section ... -->
+                         <div class="mb-4">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5 class="mb-0">工作/实习经历 (当前简单模式下暂不支持)</h5>
+                            </div>
+                        </div>
+
+                        <!-- 技能 -->
+                        <!-- ... skills section ... -->
+                         <div class="mb-4">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5 class="mb-0">技能 (当前简单模式下暂不支持)</h5>
+                            </div>
+                        </div>
+
+                        <!-- 项目经历 -->
+                        <!-- ... projects section ... -->
+                         <div class="mb-4">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5 class="mb-0">项目经历 (当前简单模式下暂不支持)</h5>
+                            </div>
+                        </div>
+
+                        <!-- 保存按钮 -->
+                        <div class="text-center">
+                            <!-- 将按钮类型改为 submit，移除 onclick -->
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> 保存简历
+                            </button>
+                        </div>
+
+                        </form> <!-- 结束 form 标签 -->
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 模板 -->
+    <!-- 暂时注释掉模板，因为动态添加功能暂时禁用 -->
+    <!--
+    <template id="educationTemplate"> ... </template>
+    <template id="experienceTemplate"> ... </template>
+    <template id="skillTemplate"> ... </template>
+    <template id="projectTemplate"> ... </template>
+    -->
+
+    <!-- 引入 Bootstrap JS 和其他脚本 -->
+    <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <!-- 注释掉或移除 jQuery 和 resume-form.js 的引用 -->
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script th:src="@{/js/resume-form.js}"></script>
+
+    <!-- Bootstrap Toast 提示框 -->
+    <div th:if="${session.user}" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true">
+        <div class="toast-header">
+            <strong class="me-auto">职业生涯管理系统</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+            <i class="fas fa-check-circle me-2"></i> 简历保存成功！
+        </div>
+    </div>
+</body>
+</html> 

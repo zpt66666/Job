@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyun.javaee.mapper.UserResumeMapper">
+    <select id="selectByUserId" resultType="com.baiyun.javaee.entity.UserResume">
+        SELECT * FROM user_resume WHERE user_id = #{userId, jdbcType=BIGINT}
+    </select>
+
+    <insert id="insert" parameterType="com.baiyun.javaee.entity.UserResume" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO user_resume (user_id, full_name, contact_email, phone_number)
+        VALUES (#{userId}, #{fullName}, #{contactEmail}, #{phoneNumber})
+    </insert>
+
+    <update id="update" parameterType="com.baiyun.javaee.entity.UserResume">
+        UPDATE user_resume
+        SET full_name = #{fullName},
+            contact_email = #{contactEmail},
+            phone_number = #{phoneNumber}
+        WHERE id = #{id}
+    </update>
+</mapper> 

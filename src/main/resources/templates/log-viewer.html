@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>日志管理 - 职业生涯管理系统</title>
+    <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+    <style>
+        #logContent {
+            width: 100%;
+            height: 600px;
+            font-family: monospace;
+            white-space: pre;
+            overflow: auto;
+            border: 1px solid #ccc;
+            padding: 10px;
+            background-color: #f8f9fa;
+        }
+
+        .filter-controls {
+            margin-bottom: 15px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .pagination-controls {
+            margin-top: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="#">职业生涯管理系统</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/}"><i class="fas fa-home"></i> 首页</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/personal-info}"><i class="fas fa-user"></i> 个人信息</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/skill-assessment}"><i class="fas fa-briefcase"></i> 职业规划</a>
+                    </li>
+                     <li class="nav-item">
+                        <a class="nav-link" th:href="@{/resume-tool}"><i class="fas fa-file-alt"></i> 简历工具</a>
+                    </li>
+                     <li class="nav-item">
+                        <a class="nav-link" th:href="@{/mock-interview}"><i class="fas fa-chalkboard-teacher"></i> 模拟面试</a>
+                    </li>
+                     <li class="nav-item">
+                        <a class="nav-link" th:href="@{/action-plan}"><i class="fas fa-tasks"></i> 行动计划</a>
+                    </li>
+                     <li class="nav-item">
+                        <a class="nav-link active" th:href="@{/log-viewer}"><i class="fas fa-clipboard-list"></i> 日志管理</a>
+                    </li>
+                </ul>
+                <div class="d-flex">
+                    <div th:if="${session.user}" class="dropdown">
+                        <button class="btn btn-light dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-circle"></i>
+                            <span th:text="${session.user?.username}">用户名</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" th:href="@{/settings}"><i class="fas fa-cog"></i> 设置</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> 退出</a></li>
+                        </ul>
+                    </div>
+                     <div th:unless="${session.user}">
+                        <a th:href="@{/login}" class="btn btn-outline-light"><i class="fas fa-sign-in-alt me-2"></i>登录</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title mb-3">应用日志</h4>
+
+                <div class="filter-controls">
+                    <label for="logLevel">日志级别:</label>
+                    <select id="logLevel" class="form-select form-select-sm w-auto">
+                        <option value="">所有</option>
+                        <option value="TRACE">TRACE</option>
+                        <option value="DEBUG">DEBUG</option>
+                        <option value="INFO">INFO</option>
+                        <option value="WARN">WARN</option>
+                        <option value="ERROR">ERROR</option>
+                    </select>
+
+                    <label for="logKeyword">关键字:</label>
+                    <input type="text" id="logKeyword" class="form-control form-control-sm w-auto" placeholder="输入关键字">
+
+                    <button id="applyFilterBtn" class="btn btn-primary btn-sm">应用过滤</button>
+                </div>
+
+                <pre id="logContent">加载中...</pre>
+
+                <div class="pagination-controls">
+                     <button id="prevPageBtn" class="btn btn-secondary btn-sm">上一页</button>
+                     <span>
+                         页码: <span id="currentPage">1</span> / <span id="totalPages">1</span>
+                         总条数: <span id="totalLogs">0</span>
+                     </span>
+                     <button id="nextPageBtn" class="btn btn-secondary btn-sm">下一页</button>
+
+                     <label for="pageSize">每页显示:</label>
+                     <select id="pageSize" class="form-select form-select-sm w-auto">
+                         <option value="10">10</option>
+                         <option value="20" selected>20</option>
+                         <option value="50">50</option>
+                         <option value="100">100</option>
+                     </select>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- 引入 Bootstrap JS 和其他脚本 -->
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+    <script th:src="@{/js/log-viewer.js}"></script>
+</body>
+</html> 

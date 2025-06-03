@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyun.javaee.mapper.ResumeProjectMapper">
+
+    <!-- 根据简历ID删除项目经历 -->
+    <delete id="deleteByResumeId">
+        DELETE FROM resume_project WHERE resume_id = #{resumeId}
+    </delete>
+
+    <!-- 根据简历ID查询项目经历 -->
+    <select id="selectByResumeId" resultType="com.baiyun.javaee.entity.ResumeProject">
+        SELECT * FROM resume_project WHERE resume_id = #{resumeId}
+    </select>
+
+    <!-- 批量插入项目经历 -->
+    <insert id="insertBatch" parameterType="java.util.List">
+        INSERT INTO resume_project (resume_id, project_name, start_date, end_date, description, technologies)
+        VALUES
+        <foreach collection="list" item="project" separator=",">
+            (#{project.resumeId}, #{project.projectName}, #{project.startDate}, #{project.endDate}, #{project.description}, #{project.technologies})
+        </foreach>
+    </insert>
+
+</mapper> 

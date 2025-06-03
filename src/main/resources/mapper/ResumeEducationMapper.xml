@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyun.javaee.mapper.ResumeEducationMapper">
+
+    <!-- 根据简历ID删除教育经历 -->
+    <delete id="deleteByResumeId">
+        DELETE FROM resume_education WHERE resume_id = #{resumeId}
+    </delete>
+
+    <!-- 根据简历ID查询教育经历 -->
+    <select id="selectByResumeId" resultType="com.baiyun.javaee.entity.ResumeEducation">
+        SELECT * FROM resume_education WHERE resume_id = #{resumeId}
+    </select>
+
+    <!-- 批量插入教育经历 -->
+    <insert id="insertBatch" parameterType="java.util.List">
+        INSERT INTO resume_education (resume_id, school_name, degree, major, start_date, end_date, description)
+        VALUES
+        <foreach collection="list" item="edu" separator=",">
+            (#{edu.resumeId}, #{edu.schoolName}, #{edu.degree}, #{edu.major}, #{edu.startDate}, #{edu.endDate}, #{edu.description})
+        </foreach>
+    </insert>
+
+</mapper> 

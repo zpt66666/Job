@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>模拟面试 - 职业生涯管理系统</title>
+    <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="#">职业生涯管理系统</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/}"><i class="fas fa-home"></i> 首页</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/personal-info}"><i class="fas fa-user"></i> 个人信息</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/skill-assessment}"><i class="fas fa-briefcase"></i> 职业规划</a>
+                    </li>
+                     <li class="nav-item">
+                        <a class="nav-link" th:href="@{/resume-tool}"><i class="fas fa-file-alt"></i> 简历工具</a>
+                    </li>
+                     <li class="nav-item">
+                        <a class="nav-link active" th:href="@{/mock-interview}"><i class="fas fa-chalkboard-teacher"></i> 模拟面试</a>
+                    </li>
+                     <li class="nav-item">
+                        <a class="nav-link" th:href="@{/action-plan}"><i class="fas fa-tasks"></i> 行动计划</a>
+                    </li>
+                     <li class="nav-item">
+                        <a class="nav-link" th:href="@{/log-viewer}"><i class="fas fa-clipboard-list"></i> 日志管理</a>
+                    </li>
+                </ul>
+                <div class="d-flex">
+                    <div th:if="${session.user}" class="dropdown">
+                        <button class="btn btn-light dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-circle"></i>
+                            <span th:text="${session.user?.username}">用户名</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" th:href="@{/settings}"><i class="fas fa-cog"></i> 设置</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> 退出</a></li>
+                        </ul>
+                    </div>
+                     <div th:unless="${session.user}">
+                        <a th:href="@{/login}" class="btn btn-outline-light"><i class="fas fa-sign-in-alt me-2"></i>登录</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <h2>模拟面试</h2>
+
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label for="categorySelect" class="form-label">选择分类:</label>
+                <select class="form-select" id="categorySelect">
+                    <option value="all">所有分类</option>
+                    <!-- 分类选项将通过JavaScript加载 -->
+                </select>
+            </div>
+        </div>
+
+        <div id="interviewQuestionsList">
+            <!-- 面试题将在这里加载 -->
+        </div>
+
+    </div>
+
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // 加载分类列表
+            fetchCategories();
+
+            // 监听分类选择变化
+            $('#categorySelect').on('change', function() {
+                fetchQuestions($(this).val());
+            });
+
+            // 默认加载所有题目
+            fetchQuestions('all');
+        });
+
+        function fetchCategories() {
+            $.ajax({
+                url: '/career/api/interview/categories', // 获取分类的接口
+                method: 'GET',
+                success: function(response) {
+                    if (response.code === 200 && response.data) {
+                        const categorySelect = $('#categorySelect');
+                        // 清空现有选项，保留"所有分类"
+                        categorySelect.find('option:not([value="all"])').remove();
+                        response.data.forEach(function(category) {
+                            categorySelect.append(`<option value="${category}">${category}</option>`);
+                        });
+                    }
+                },
+                error: function(xhr) {
+                    console.error('获取分类失败:', xhr);
+                }
+            });
+        }
+
+        function fetchQuestions(category) {
+            const questionsListDiv = $('#interviewQuestionsList');
+            questionsListDiv.empty(); // 清空现有题目
+            questionsListDiv.append('<p>加载中...</p>'); // 显示加载状态
+
+            $.ajax({
+                url: '/career/api/interview/questions', // 获取面试题的接口
+                method: 'GET',
+                data: { category: category },
+                success: function(response) {
+                    questionsListDiv.empty(); // 清空加载状态
+                    if (response.code === 200 && response.data && response.data.length > 0) {
+                        response.data.forEach(function(question) {
+                            const questionHtml = `
+                                <div class="card mb-3">
+                                    <div class="card-header">
+                                        ${question.category ? '[' + question.category + '] ' : ''}${question.question}
+                                    </div>
+                                    <div class="card-body">
+                                        <p class="card-text">${question.answer}</p>
+                                    </div>
+                                </div>
+                            `;
+                            questionsListDiv.append(questionHtml);
+                        });
+                    } else {
+                        questionsListDiv.append('<p>没有找到面试题。</p>');
+                    }
+                },
+                error: function(xhr) {
+                    console.error('获取面试题失败:', xhr);
+                    questionsListDiv.empty();
+                    questionsListDiv.append('<p>加载面试题失败。</p>');
+                }
+            });
+        }
+    </script>
+</body>
+</html> 

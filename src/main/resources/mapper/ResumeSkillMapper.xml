@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyun.javaee.mapper.ResumeSkillMapper">
+
+    <!-- 根据简历ID删除技能 -->
+    <delete id="deleteByResumeId">
+        DELETE FROM resume_skill WHERE resume_id = #{resumeId}
+    </delete>
+
+    <!-- 根据简历ID查询技能 -->
+    <select id="selectByResumeId" resultType="com.baiyun.javaee.entity.ResumeSkill">
+        SELECT * FROM resume_skill WHERE resume_id = #{resumeId}
+    </select>
+
+    <!-- 批量插入技能 -->
+    <insert id="insertBatch" parameterType="java.util.List">
+        INSERT INTO resume_skill (resume_id, skill_name, level)
+        VALUES
+        <foreach collection="list" item="skill" separator=",">
+            (#{skill.resumeId}, #{skill.skillName}, #{skill.level})
+        </foreach>
+    </insert>
+
+</mapper> 
